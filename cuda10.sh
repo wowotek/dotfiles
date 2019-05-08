@@ -11,8 +11,8 @@ bash -c 'echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubunt
 bash -c 'echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda_learn.list'
 
 apt update
-apt install cuda-10-0
-apt install libcudnn7
+apt install cuda-10-0 -y
+apt install libcudnn7 -y
 
 echo "# set PATH for cuda 10.0 installation" >> ~/.profile
 echo "if [ -d "/usr/local/cuda-10.0/bin/" ]; then" >> ~/.profile
