@@ -1,0 +1,466 @@
+;=================================================================;
+;                                                                 ;
+; ██╗    ██╗ ██████╗ ██╗    ██╗ ██████╗ ████████╗███████╗██╗  ██╗ ;
+; ██║    ██║██╔═══██╗██║    ██║██╔═══██╗╚══██╔══╝██╔════╝██║ ██╔╝ ;
+; ██║ █╗ ██║██║   ██║██║ █╗ ██║██║   ██║   ██║   █████╗  █████╔╝  ;
+; ██║███╗██║██║   ██║██║███╗██║██║   ██║   ██║   ██╔══╝  ██╔═██╗  ;
+; ╚███╔███╔╝╚██████╔╝╚███╔███╔╝╚██████╔╝   ██║   ███████╗██║  ██╗ ;
+;  ╚══╝╚══╝  ╚═════╝  ╚══╝╚══╝  ╚═════╝    ╚═╝   ╚══════╝╚═╝  ╚═╝ ;
+;                                                                 ;
+;    PART OF .dotfiles/polybar/                                   ;
+;                                                                 ;
+;=================================================================;
+
+[colors]
+background = #222
+background-alt = #444
+foreground = #dfdfdf
+foreground-alt = #555
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+success = #00ff00
+
+[bar/bottom]
+bottom = true
+width = 100%
+height = 20
+radius = 0.0
+fixed-center = true
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 0
+border-size = 0
+border-color = #222
+
+padding-left = 1
+padding-right = 1
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = Fira Code Light:fontformat=truetype:size=7:antialias=true;2
+font-1 = fontawesome:style=Solid:size=11;4
+font-2 = monospace:pixelsize=10;2
+
+modules-left = temperature devmount memory cpu
+modules-center = 
+modules-right = wifi eth
+
+tray-position = center
+tray-padding = 0
+tray-background = #0063ff
+
+[bar/top]
+bottom=false
+width = 100%
+height = 22
+radius = 0.0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 0
+line-color = #f00
+
+border-size = 4
+border-color = #222
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = Fira Code Light:fontformat=truetype:size=8:antialias=true;2
+font-1 = fontawesome:style=Regular:size=13;2
+font-2 = monospace:pixelsize=10;2
+
+modules-left = xwindow
+modules-center = i3
+modules-right = date time pulseaudio battery powermenu
+
+;tray-position = center
+;tray-padding = 0
+;tray-background = #0063ff
+
+;wm-restack = bspwm
+;wm-restack = i3
+
+override-redirect = false
+
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
+
+scroll-up = i3wm-wsnext
+scroll-down = i3wm-wsprev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+;dim-value = 0.5
+
+[module/xwindow]
+type = internal/xwindow
+label = " %title:0:100:...% "
+
+label-background = ${colors.alert}
+
+[module/devmount]
+type = internal/fs
+interval = 1
+
+mount-0 = /
+
+label-mounted =  %used%/%total%
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.foreground-alt}
+
+[module/i3]
+type = internal/i3
+
+pin-workspaces = true
+strip-wsnumbers = true
+index-sort = true
+
+; Use fuzzy (partial) matching on labels when assigning 
+; icons to workspaces
+; Example: code;♚ will apply the icon to all workspaces 
+; containing 'code' in the label
+; Default: false
+fuzzy-match = true
+
+ws-icon-0 = 1;
+ws-icon-1 = 2;
+ws-icon-2 = 3;
+ws-icon-3 = 4;
+ws-icon-4 = 5;
+ws-icon-5 = 6;
+ws-icon-default = ♟
+
+label-dimmed-underline = ${root.background}
+
+format = <label-state> <label-mode>
+
+label-mode = %mode%
+label-mode-padding = 0
+label-mode-background = #e60053
+
+label-focused = %icon%
+label-focused-foreground = #ffffff
+label-focused-background = #3f3f3f
+label-focused-underline = #fba922
+label-focused-padding = 2
+
+label-unfocused = %icon%
+label-unfocused-padding = 2
+
+label-visible = %index%
+label-visible-underline = #555555
+label-visible-padding = 2
+
+label-urgent = %index%
+label-urgent-foreground = #000000
+label-urgent-background = #bd2c40
+label-urgent-padding = 4
+
+label-separator = |
+label-separator-padding = 0
+label-separator-foreground = #ffb52a
+
+[module/cpu]
+type = internal/cpu
+interval = 0.150
+format-prefix = 
+format-prefix-foreground = ${colors.foreground}
+format-underline = #f90000
+label = %percentage:2%%
+
+[module/memory]
+type = internal/memory
+interval = 0.1
+format = <label>
+format-prefix = ""
+format-prefix-foreground = ${colors.foreground}
+format-underline = #4bffdc
+label = " %mb_used% / %mb_total%"
+
+[module/wifi]
+type = internal/network
+interface = wlp3s0
+interval = 0.1
+
+format-connected = <label-connected> <ramp-signal>
+format-connected-underline = #9f78e1
+label-connected = %local_ip%@%essid%
+label-connected-foreground = ${colors.success}
+
+;format-disconnected = No Wifi
+format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+label-disconnected = disconnected
+label-disconnected-foreground = ${colors.alert}
+
+ramp-signal-0 = 000
+ramp-signal-1 = 001
+ramp-signal-2 = 002
+ramp-signal-3 = 003
+ramp-signal-4 = 004
+ramp-signal-5 = 005
+ramp-signal-6 = 006
+ramp-signal-7 = 007
+ramp-signal-8 = 008
+ramp-signal-9 = 009
+ramp-signal-10 = 010
+ramp-signal-11 = 011
+ramp-signal-12 = 012
+ramp-signal-13 = 013
+ramp-signal-14 = 014
+ramp-signal-15 = 015
+ramp-signal-16 = 016
+ramp-signal-17 = 017
+ramp-signal-18 = 018
+ramp-signal-19 = 019
+ramp-signal-20 = 020
+ramp-signal-21 = 021
+ramp-signal-22 = 022
+ramp-signal-23 = 023
+ramp-signal-24 = 024
+ramp-signal-25 = 025
+ramp-signal-26 = 026
+ramp-signal-27 = 027
+ramp-signal-28 = 028
+ramp-signal-29 = 029
+ramp-signal-30 = 030
+ramp-signal-31 = 031
+ramp-signal-32 = 032
+ramp-signal-33 = 033
+ramp-signal-34 = 034
+ramp-signal-35 = 035
+ramp-signal-36 = 036
+ramp-signal-37 = 037
+ramp-signal-38 = 038
+ramp-signal-39 = 039
+ramp-signal-40 = 040
+ramp-signal-41 = 041
+ramp-signal-42 = 042
+ramp-signal-43 = 043
+ramp-signal-44 = 044
+ramp-signal-45 = 045
+ramp-signal-46 = 046
+ramp-signal-47 = 047
+ramp-signal-48 = 048
+ramp-signal-49 = 049
+ramp-signal-50 = 050
+ramp-signal-51 = 051
+ramp-signal-52 = 052
+ramp-signal-53 = 053
+ramp-signal-54 = 054
+ramp-signal-55 = 055
+ramp-signal-56 = 056
+ramp-signal-57 = 057
+ramp-signal-58 = 058
+ramp-signal-59 = 059
+ramp-signal-60 = 060
+ramp-signal-61 = 061
+ramp-signal-62 = 062
+ramp-signal-63 = 063
+ramp-signal-64 = 064
+ramp-signal-65 = 065
+ramp-signal-66 = 066
+ramp-signal-67 = 067
+ramp-signal-68 = 068
+ramp-signal-69 = 069
+ramp-signal-70 = 070
+ramp-signal-71 = 071
+ramp-signal-72 = 072
+ramp-signal-73 = 073
+ramp-signal-74 = 074
+ramp-signal-75 = 075
+ramp-signal-76 = 076
+ramp-signal-77 = 077
+ramp-signal-78 = 078
+ramp-signal-79 = 079
+ramp-signal-80 = 080
+ramp-signal-81 = 081
+ramp-signal-82 = 082
+ramp-signal-83 = 083
+ramp-signal-84 = 084
+ramp-signal-85 = 085
+ramp-signal-86 = 086
+ramp-signal-87 = 087
+ramp-signal-88 = 088
+ramp-signal-89 = 089
+ramp-signal-90 = 090
+ramp-signal-91 = 091
+ramp-signal-92 = 092
+ramp-signal-93 = 093
+ramp-signal-94 = 094
+ramp-signal-95 = 095
+ramp-signal-96 = 096
+ramp-signal-97 = 097
+ramp-signal-98 = 098
+ramp-signal-99 = 099
+ramp-signal-100 = 100
+ramp-signal-foreground = ${colors.primary}
+
+[module/eth]
+type = internal/network
+interface = enp2s0
+interval = 0.1
+
+format-connected-underline = #55aa55
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+label-connected = %local_ip%
+
+format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+label-disconnected = disconnected
+label-disconnected-foreground = ${colors.alert}
+
+[module/date]
+type = internal/date
+interval = 60
+
+date = %d/%m/%y
+
+label =  %date%
+
+[module/time]
+type = internal/date
+interval = 1
+
+time = %H:%M:%S
+
+label =  %time%
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume = <ramp-volume> <label-volume>
+
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+
+label-volume = %percentage%%
+label-volume-foreground = ${root.foreground}
+
+label-muted = -%
+label-muted-foreground = #ff0000
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC0
+full-at = 98
+
+format-charging = <animation-charging> <label-charging>
+format-charging-underline = #ffb52a
+
+format-discharging = <animation-discharging> <ramp-capacity> <label-discharging>
+format-discharging-underline = ${self.format-charging-underline}
+
+format-full-prefix = 
+format-full-prefix-foreground = #00ff00
+format-full-underline = ${self.format-charging-underline}
+
+label-charging = %percentage%%
+label-discharging = %percentage%%
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-foreground = ${colors.foreground}
+
+animation-charging-0 = " "
+animation-charging-1 = " "
+animation-charging-2 = " "
+animation-charging-3 = " "
+animation-charging-4 = " "
+animation-charging-5 = " "
+animation-charging-6 = " "
+animation-charging-7 = " "
+animation-charging-8 = " "
+animation-charging-9 = " "
+animation-charging-10 = " "
+animation-charging-11 = " "
+animation-charging-12 = " "
+animation-charging-13 = " "
+animation-charging-14 = " "
+animation-charging-foreground = ${colors.foreground}
+animation-charging-framerate = 250
+
+animation-discharging-0 = ""
+animation-discharging-1 = ""
+animation-discharging-2 = ""
+animation-discharging-3 = ""
+animation-discharging-4 = ""
+animation-discharging-5 = ""
+animation-discharging-6 = ""
+animation-discharging-7 = ""
+animation-discharging-8 = ""
+animation-discharging-9 = ""
+animation-discharging-10 = ""
+animation-discharging-11 = ""
+animation-discharging-12 = ""
+animation-discharging-13 = ""
+animation-discharging-14 = ""
+animation-discharging-foreground = ${colors.foreground}
+animation-discharging-framerate = 350
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 100
+
+format = <ramp> <label>
+format-underline = #f50a4d
+format-warn = <ramp> <label-warn>
+format-warn-underline = ${self.format-underline}
+
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.secondary}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-3 = 
+ramp-4 = 
+ramp-foreground = ${colors.foreground}
+
+[module/powermenu]
+type = custom/menu
+
+expand-right = false
+
+format-spacing = 1
+
+label-open = 
+label-open-foreground = ${colors.primary}
+label-close = 
+label-close-foreground = ${colors.secondary}
+label-separator = |
+label-separator-foreground = ${colors.foreground-alt}
+
+menu-0-0 = 
+menu-0-0-exec = sudo systemctl reboot
+menu-0-1 = 
+menu-0-1-exec = sudo systemctl poweroff
+
+[settings]
+screenchange-reload = true
+
+compositing-background = screen
+compositing-foreground = source
+compositing-border = over
+pseudo-transparency = false
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
